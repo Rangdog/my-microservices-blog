@@ -13,16 +13,16 @@ spec:
           app: mysql
       spec:
         containers:
-          -name: mysql
-          image: mysql:8
-          env:
-            -name: MYSQL_ROOT_PASSWORD
-            value: "123"
-            -name: MYSQL_DATABASE
-            value: "userdb"
-            -name: MYSQL_USER
-            value: "thanh"
-            -name: MYSQL_PASSWORD
-            value: "123"
+          - name: mysql
+            image: mysql:8
+            env:
+              - name: MYSQL_ROOT_PASSWORD
+                value: "123"
+              - name: MYSQL_DATABASE
+                value: "userdb"
+              - name: MYSQL_USER
+                value: "thanh"
+              - name: MYSQL_PASSWORD
+                value: "123"
         ports:
           -containerPort: 3306
