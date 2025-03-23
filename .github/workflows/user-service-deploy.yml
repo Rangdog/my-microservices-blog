@@ -18,9 +18,10 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Setup gcloud CLI
+      - name: Setup gcloud CLI & Install gke-gcloud-auth-plugin
         run: |
-          gcloud auth configure-docker gcr.io --quiet
+          gcloud auth configure-docker gcr.io
+          gcloud components install gke-gcloud-auth-plugin
           gcloud container clusters get-credentials my-cluster --zone=asia-southeast1-a --project=my-blog-454607
 
       - name: Build & Push Docker Image
