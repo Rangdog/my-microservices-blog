@@ -8,7 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    env:
+      USE_GKE_GCLOUD_AUTH_PLUGIN: True
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -18,12 +19,9 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Setup gcloud CLI & Install gke-gcloud-auth-plugin
+      - name: Setup gcloud CLI
         run: |
           gcloud auth configure-docker gcr.io
-          sudo apt-get update && sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
-          echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
-          source ~/.bashrc
           gcloud container clusters get-credentials my-cluster --zone=asia-southeast1-a --project=my-blog-454607
 
       - name: Build & Push Docker Image
