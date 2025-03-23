@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  relicas: 2
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+      image: gcr.io/my-blog-454607/user-service:latest
+      env:
+      - name: DATABASE_URL
+        value: "thanh:123@tcp(mysql:3306)/userdb"
+      ports:
+      - containerPort: 8080
