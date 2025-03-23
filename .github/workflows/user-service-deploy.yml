@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       USE_GKE_GCLOUD_AUTH_PLUGIN: True
 
@@ -31,13 +31,13 @@ jobs:
       # Cài đặt gke-gcloud-auth-plugin bằng apt-get
       - name: Install gke-gcloud-auth-plugin
         run: |
-          # Tải plugin trực tiếp
-          curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-403.0.0-linux-x86_64.tar.gz
-          tar -xvf google-cloud-sdk-403.0.0-linux-x86_64.tar.gz
-          ./google-cloud-sdk/install.sh --quiet
-          ./google-cloud-sdk/bin/gcloud components install gke-gcloud-auth-plugin --quiet
-          # Thêm gcloud vào PATH
-          export PATH=$PATH:$PWD/google-cloud-sdk/bin
+          # Thêm GPG key của Google Cloud
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+          # Thêm Google Cloud CLI repository
+          echo "deb https://packages.cloud.google.com/apt google-cloud-cli main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          # Cập nhật danh sách gói và cài đặt plugin
+          sudo apt-get update
+          sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
 
       # Cấu hình Docker để đẩy image lên GCR
       - name: Configure Docker for GCR
