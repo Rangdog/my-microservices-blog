@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: user-service
 spec:
-  relicas: 2
+  replicas: 2
   selector:
     matchLabels:
       app: user-service
@@ -13,10 +13,10 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service
-      image: gcr.io/my-blog-454607/user-service:latest
-      env:
-      - name: DATABASE_URL
-        value: "thanh:123@tcp(mysql:3306)/userdb"
-      ports:
-      - containerPort: 8080
+        - name: user-service
+          image: gcr.io/my-blog-454607/user-service:latest
+          env:
+          - name: DATABASE_URL
+            value: "mysql://thanh:123@tcp(mysql:3306)/userdb?charset=utf8&parseTime=True&loc=Local"
+          ports:
+          - containerPort: 8080
