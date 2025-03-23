@@ -1,0 +1,16 @@
+/bin/
+/obj/
+*.exe
+*.out
+*.log
+
+.env
+*.env
+
+/vendor/
+go.sum
+.vscode/
+.idea/
+*.swp
+**/node_modules/
+docker-compose.override.yml
