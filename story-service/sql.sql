@@ -12,7 +12,7 @@ CREATE TABLE users(
 CREATE TABLE stories(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    image_story MEDIUMBLOB NOT NULL,
+    image_story MEDIUMBLOB  NULL,
     description TEXT,
     author_id INT NOT NULL,
     status ENUM('finish', 'continue', 'pause') DEFAULT 'finish',

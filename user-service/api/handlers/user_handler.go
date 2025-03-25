@@ -68,3 +68,10 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request){
 	}
 	response.Success(w, http.StatusOK, data, "Login successfuly")
 }
+
+func (h *UserHandler) HealthCheck(w http.ResponseWriter, r *http.Request){
+	response:=map[string]string{"status": "health"}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}

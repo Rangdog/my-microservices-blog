@@ -1,13 +1,15 @@
 package api
 
 import (
-	"net/http"
 	"user-service/api/handlers"
+
+	"github.com/go-chi/chi/v5"
 )
 
-func SetupRoutes(handler *handlers.UserHandler, jwtsecret string) *http.ServeMux{ 
-	mux:= http.NewServeMux()
-	mux.HandleFunc("/register", handler.Register)
-	mux.HandleFunc("/login", handler.Login)
-	return mux
+func SetupRoutes(handler *handlers.UserHandler, jwtsecret string) *chi.Mux{ 
+	r:= chi.NewRouter()
+	r.Post("/register", handler.Register)
+	r.Post("/login", handler.Login)
+	r.Get("/heath", handler.HealthCheck)
+	return r
 }

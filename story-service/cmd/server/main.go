@@ -6,12 +6,12 @@ import (
 	"log"
 	"microservices/pkg/discovery"
 	"net/http"
-	"user-service/api"
-	"user-service/api/handlers"
-	"user-service/config"
-	"user-service/internal/domain/service"
-	"user-service/internal/infrastructure/database"
-	logger "user-service/internal/pkg/Logger"
+	"stories-service/api"
+	"stories-service/api/handlers"
+	"stories-service/config"
+	"stories-service/internal/domain/service"
+	"stories-service/internal/infrastructure/database"
+	logger "stories-service/internal/pkg/Logger"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -42,18 +42,16 @@ func main() {
 	}
 	logger.Info("Connected to MySQL")
 
-
-	consulClient, err := discovery.NewConsulClient("consul:8500", "user-service", "user-service", 8080)
+	consulClient, err := discovery.NewConsulClient("consul:8500", "story-service", "story-service", 8100)
 	if err != nil{
-		log.Fatal("Failed to initalize Consul client: ", err)
+		log.Fatal("Failed to initialize Consul client", err)
 	}
-
-	ctx, _ := context.WithCancel(context.Background())
+	ctx,_:=context.WithCancel(context.Background())
 	go consulClient.StartHeartbeat(ctx)
 
-	userRepo := database.NewMySQLUserRepository(db)
-	UserService := service.NewUserService(userRepo, cfg.JWTSecret)
-	UserHandler := handlers.NewUserHandler(UserService)
+	userRepo := database.NewMySQLStoryRepository(db)
+	UserService := service.NewStoryService(userRepo)
+	UserHandler := handlers.NewStoryHandler(UserService)
 
 	mux := api.SetupRoutes(UserHandler, cfg.JWTSecret)
 

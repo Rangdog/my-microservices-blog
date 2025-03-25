@@ -1,0 +1,104 @@
+name: Deploy web to GKE
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      USE_GKE_GCLOUD_AUTH_PLUGIN: True
+
+    steps:
+      # Checkout mã nguồn
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # Xác thực với Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Cài đặt Google Cloud SDK và gke-gcloud-auth-plugin
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: my-blog-454607
+          install_components: gke-gcloud-auth-plugin
+
+      # Cấu hình Docker để đẩy image lên GCR
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker gcr.io --quiet
+
+      # Kết nối với GKE cluster
+      - name: Connect to GKE cluster
+        run: |
+          gcloud container clusters get-credentials my-cluster \
+            --zone asia-southeast1-a \
+            --project my-blog-454607
+
+      # Build và push Docker image cho user-service
+      - name: Build & Push user-service Docker Image
+        run: |
+          docker build -t gcr.io/my-blog-454607/user-service:latest ./user-service
+          docker push gcr.io/my-blog-454607/user-service:latest
+
+      # Build và push Docker image cho story-service
+      - name: Build & Push story-service Docker Image
+        run: |
+          docker build -t gcr.io/my-blog-454607/story-service:latest ./story-service
+          docker push gcr.io/my-blog-454607/story-service:latest
+      
+      # Build và push Docker image cho api-gateway
+      - name: Build & Push api-gateway Docker Image
+        run: |
+          docker build -t gcr.io/my-blog-454607/api-gateway:latest ./api-gateway
+          docker push gcr.io/my-blog-454607/api-gateway:latest
+      
+      # Triển khai MySQL lên GKE
+      - name: Deploy MySQL to GKE
+        run: |
+          kubectl apply -f k8s/mysql/mysql-configmap.yaml
+          kubectl apply -f k8s/mysql/mysql-pv.yaml
+          kubectl apply -f k8s/mysql/mysql-deployment.yaml
+          kubectl apply -f k8s/mysql/mysql-service.yaml
+      # Triển khai Consul lên GKE
+      - name: Deploy Consul to GKE
+        run: |
+          kubectl apply -f k8s/consul/consul-deployment.yaml
+          kubectl apply -f k8s/consul/consul-service.yaml
+          kubectl apply -f k8s/consul/consul-ui-service.yaml
+
+      # Triển khai user-service lên GKE
+      - name: Deploy user-service to GKE
+        run: |
+          kubectl apply -f k8s/user-service-deployment.yaml
+          kubectl apply -f k8s/user-service-service.yaml
+      
+      # Triển khai story-service lên GKE
+      - name: Deploy story-service to GKE
+        run: |
+          kubectl apply -f k8s/story-service-deployment.yaml
+          kubectl apply -f k8s/story-service-service.yaml
+      
+      # Triển khai api-gateway lên GKE
+      - name: Deploy api-gateway to GKE
+        run: |
+          kubectl apply -f k8s/api-gateway/api-gateway-deployment.yaml
+          kubectl apply -f k8s/api-gateway/api-gateway-service.yaml
+
+      # Kiểm tra trạng thái pods
+      - name: Check Kubernetes status
+        run: |
+          kubectl get pods
+          kubectl wait --for=condition=ready pod -l app=user-service --timeout=300s
+          kubectl wait --for=condition=ready pod -l app=story-service --timeout=300s
+          kubectl wait --for=condition=ready pod -l app=consul --timeout=300s
+          kubectl wait --for=condition=ready pod -l app=mysql --timeout=300s
