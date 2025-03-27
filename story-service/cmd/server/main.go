@@ -22,7 +22,7 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 	if cfg.Port == ""{
-		cfg.Port = ":8080"
+		cfg.Port = ":8100"
 	}
 
 	if  cfg.JWTSecret == ""{
