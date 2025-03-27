@@ -5,7 +5,7 @@ COPY go.mod /go.mod
 RUN go mod download
 
 FROM base AS builder
-COPY user-service .  # Sao chép đúng thư mục user-service vào container
+COPY ./user-service .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o user-service ./cmd/server
 
 FROM alpine:latest
