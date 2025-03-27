@@ -1,9 +1,16 @@
 package entity
-import "time"
+
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct{
-	ID int64 `json:"id"`
-	Email string `json:"email"`
-	Password string	`json:"-"` // Không trả về password khi response
-	CreatedAt time.Time `json:"created_at"`
+	ID int64 `gorm:"primaryKey;autoIncrement" json:"id"`
+	Email string `gorm:"type:varchar(255);unique; not null" json:"email"`
+	Password string	`gorm:"type:varchar(255); not null" json:"-"` // Không trả về password khi response
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"delete_at"`
+	Role string `gorm:"type:enum('user', 'admin');default:'user'" json:"role"`
 }

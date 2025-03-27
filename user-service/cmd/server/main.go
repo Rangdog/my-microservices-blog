@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"microservices/pkg/discovery"
 	"net/http"
 	"user-service/api"
 	"user-service/api/handlers"
 	"user-service/config"
+	"user-service/internal/domain/entity"
 	"user-service/internal/domain/service"
 	"user-service/internal/infrastructure/database"
 	logger "user-service/internal/pkg/Logger"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // dấu _ trong imort là giúp go chỉ tải driver mà không dùng trực tiếp
@@ -27,18 +28,15 @@ func main() {
 		logger.Error("JWT_SECRET is required", nil)
 		return
 	}
-
-	db, err := sql.Open("mysql", cfg.MySQLDSN)
+	dsn:="thanh:123@tcp(localhost:3306)/user_db?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil{
 		logger.Error("Failed to connect to Mysql", err)
 		return
 	}
 
-	defer db.Close()
-
-	if err := db.Ping(); err != nil{
-		logger.Error("MySQL ping failed", err)
-		return
+	if err := db.AutoMigrate(&entity.User{}); err!=nil{
+		log.Fatal("Failed Migration")
 	}
 	logger.Info("Connected to MySQL")
 

@@ -6,14 +6,14 @@ CREATE TABLE users(
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL,
-    role ENUM('user', 'author', 'admin') DEFAULT 'user'
+    role ENUM('user', 'admin') DEFAULT 'user'
 )ENGINE=InnoDB;
 
 CREATE TABLE stories(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     image_story MEDIUMBLOB  NULL,
-    description TEXT,
+    description TEXT DEFAULT '',
     author_id INT NOT NULL,
     status ENUM('finish', 'continue', 'pause') DEFAULT 'finish',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

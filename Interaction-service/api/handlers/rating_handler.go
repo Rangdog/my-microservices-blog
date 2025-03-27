@@ -1,35 +1,36 @@
 package handlers
 
 import (
+	"Interaction-service/internal/domain/service"
+	response "Interaction-service/internal/pkg/Response"
 	"encoding/json"
 	"errors"
 	"net/http"
-	"stories-service/internal/domain/service"
-	response "stories-service/internal/pkg/Response"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 )
 
-type StoryHandler struct {
-	service *service.StoryService
+type RatingHandler struct {
+	service *service.RatingService
 	validator *validator.Validate
 }
 
-func NewStoryHandler(service *service.StoryService) *StoryHandler{
-	return &StoryHandler{service: service, validator: validator.New()}
+func NewRatingHandler(service *service.RatingService) *RatingHandler{
+	return &RatingHandler{service: service, validator: validator.New()}
 }
 
-func (h *StoryHandler) Create(w http.ResponseWriter, r *http.Request){
+func (h *RatingHandler) Create(w http.ResponseWriter, r *http.Request){
 	if r.Method != http.MethodPost{
 		response.Error(w, http.StatusMethodNotAllowed, errors.New("method not allowed"))
 		return
 	}
 	var input struct{
-		Title string `json:"title" validate:"required"`
-		Description string `json:"description"`
-		Author_id int64 `json:"author_id" validate:"required"`
+		StoryID int64 `json:"storyId" validate:"required"`
+		UserID int64 `json:"userId" validate:"required"`
+		Rating int64 `json:"rating" validate:"required"`
+		Content string `json:"content"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil{
@@ -42,38 +43,37 @@ func (h *StoryHandler) Create(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	err := h.service.CreateStory(input.Title, input.Description, input.Author_id)
+	err := h.service.CreateRatting(input.StoryID, input.UserID, input.Rating, input.Content)
 	if err != nil{
 		response.Error(w, http.StatusInternalServerError, err)
 		return
 	}
-	response.Success(w, http.StatusCreated,"", "Create Story successfully")
+	response.Success(w, http.StatusCreated,"", "Create ratting successfully")
 }
 
-func (h *StoryHandler) FindById(w http.ResponseWriter, r *http.Request){
+func (h *RatingHandler) GetALLRattingByStoryID(w http.ResponseWriter, r *http.Request){
 	if r.Method != http.MethodGet{
 		response.Error(w, http.StatusMethodNotAllowed, errors.New("method not allowed"))
-		return
 	}
-	idStr := chi.URLParam(r,"id")
-	id, err := strconv.ParseInt(idStr,10,64)
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idStr, 10 ,60)
 	if err != nil{
 		response.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	story, err := h.service.GetStoryByID(id)
+	ratings,err := h.service.GetALLRattingByStoryID(id)
 	if err != nil{
-		response.Error(w, http.StatusBadRequest,err)
+		response.Error(w, http.StatusBadRequest, err)
 		return
 	}
-
 	data:=map[string]interface{}{
-		"story": story,
+		"ratings": ratings,
 	}
 	response.Success(w, http.StatusOK, data, "successfuly")
 }
 
-func (h *StoryHandler) DeleteById(w http.ResponseWriter, r *http.Request){
+
+func (h *RatingHandler) DeleteById(w http.ResponseWriter, r *http.Request){
 	if r.Method != http.MethodDelete{
 		response.Error(w, http.StatusMethodNotAllowed, errors.New("method not allowed"))
 	}
@@ -83,17 +83,9 @@ func (h *StoryHandler) DeleteById(w http.ResponseWriter, r *http.Request){
 		response.Error(w, http.StatusBadRequest, err)
 		return
 	}
-
 	err = h.service.DeleteById(id)
 	if err != nil{
 		response.Error(w, http.StatusBadRequest, err)
 		return
 	}
-}
-
-func (h *StoryHandler) HealthCheck(w http.ResponseWriter, r *http.Request){
-	response:=map[string]string{"status": "health"}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
 }
