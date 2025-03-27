@@ -3,9 +3,10 @@ WORKDIR /app
 COPY user-service/go.mod user-service/go.sum ./
 COPY go.mod /go.mod
 RUN go mod download
+
 FROM base AS builder
 WORKDIR /app/user-service 
-COPY . .
+COPY user-service/. .  # Chỉ copy nội dung của user-service vào container
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o user-service ./cmd/server
 
 FROM alpine:latest
