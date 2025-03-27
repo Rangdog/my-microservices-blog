@@ -10,7 +10,7 @@ require (
 	microservices v0.0.0
 )
 
-replace microservices v0.0.0 => ../
+replace microservices v0.0.0 => ..
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
