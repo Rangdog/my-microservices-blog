@@ -56,6 +56,12 @@ jobs:
           docker build -t gcr.io/my-blog-454607/story-service:latest ./story-service
           docker push gcr.io/my-blog-454607/story-service:latest
       
+       # Build và push Docker image cho interaction-service
+      - name: Build & Push interaction-service Docker Image
+        run: |
+          docker build -t gcr.io/my-blog-454607/interaction-service:latest ./interaction-service
+          docker push gcr.io/my-blog-454607/interaction-service:latest
+
       # Build và push Docker image cho api-gateway
       - name: Build & Push api-gateway Docker Image
         run: |
