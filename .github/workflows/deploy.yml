@@ -47,7 +47,7 @@ jobs:
       # Build và push Docker image cho user-service
       - name: Build & Push user-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/user-service:latest ./user-service
+          docker build -t gcr.io/my-blog-454607/user-service:latest -f user-service/Dockerfile .
           docker push gcr.io/my-blog-454607/user-service:latest
 
       # Build và push Docker image cho story-service
