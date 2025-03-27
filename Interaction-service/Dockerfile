@@ -1,6 +1,6 @@
 From golang:1.24.1-alpine AS base
 WORKDIR /app
-COPY Interaction-service/go.mod Interaction-service/go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 FROM base AS builder
 COPY . .
