@@ -8,7 +8,6 @@
 *.env
 
 /vendor/
-go.sum
 .vscode/
 .idea/
 *.swp
