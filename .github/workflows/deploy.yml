@@ -47,22 +47,19 @@ jobs:
       # Build và push Docker image cho user-service
       - name: Build & Push user-service Docker Image
         run: |
-          cd user-service
-          docker build -t gcr.io/my-blog-454607/user-service:latest 
+          docker build -t gcr.io/my-blog-454607/user-service:latest ./user-service
           docker push gcr.io/my-blog-454607/user-service:latest
 
       # Build và push Docker image cho story-service
       - name: Build & Push story-service Docker Image
         run: |
-          cd story-service
-          docker build -t gcr.io/my-blog-454607/story-service:latest 
+          docker build -t gcr.io/my-blog-454607/story-service:latest ./story-service
           docker push gcr.io/my-blog-454607/story-service:latest
       
        # Build và push Docker image cho interaction-service
       - name: Build & Push interaction-service Docker Image
         run: |
-          cd interaction-service
-          docker build -t gcr.io/my-blog-454607/interaction-service:latest 
+          docker build -t gcr.io/my-blog-454607/interaction-service:latest ./interaction-service
           docker push gcr.io/my-blog-454607/interaction-service:latest
 
       # Build và push Docker image cho api-gateway
