@@ -53,19 +53,19 @@ jobs:
       # Build và push Docker image cho story-service
       - name: Build & Push story-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/story-service:latest ./story-service
+          docker build -t gcr.io/my-blog-454607/story-service:latest -f story-service/Dockerfile .
           docker push gcr.io/my-blog-454607/story-service:latest
       
        # Build và push Docker image cho interaction-service
       - name: Build & Push interaction-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/interaction-service:latest ./interaction-service
+          docker build -t gcr.io/my-blog-454607/interaction-service:latest -f interaction-service/Dockerfile .
           docker push gcr.io/my-blog-454607/interaction-service:latest
 
       # Build và push Docker image cho api-gateway
       - name: Build & Push api-gateway Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/api-gateway:latest ./api-gateway
+          docker build -t gcr.io/my-blog-454607/api-gateway:latest -f api-gateway/Dockerfile .
           docker push gcr.io/my-blog-454607/api-gateway:latest
       
       # Triển khai MySQL lên GKE

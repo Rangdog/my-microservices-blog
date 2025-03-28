@@ -5,11 +5,12 @@ COPY go.mod /go.mod
 RUN go mod download
 
 FROM base AS builder
-COPY ./user-service .
+COPY user-service .
+COPY pkg/discovery /pkg/discovery
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o user-service ./cmd/server
 
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=builder /app/user-service/user-service .
+COPY --from=builder /app/user-service .
 EXPOSE 8000
 CMD ["./user-service"]
