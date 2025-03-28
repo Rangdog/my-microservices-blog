@@ -16,7 +16,7 @@ spec:
         - name: interaction-service
           image: gcr.io/my-blog-454607/interaction-service:latest
           env:
-          - name: DATABASE_URL
-            value: "mysql://thanh:123@tcp(mysql:3306)/interaction_db?charset=utf8&parseTime=True&loc=Local"
+            - name: DATABASE_URL
+              value: "mysql://thanh:123@tcp(mysql:3306)/interaction_db?charset=utf8&parseTime=True&loc=Local"
           ports:
-          - containerPort: 8080
+            - containerPort: 8200
