@@ -78,27 +78,33 @@ jobs:
       # Triển khai Consul lên GKE
       - name: Deploy Consul to GKE
         run: |
-          kubectl apply -f k8s/consul/consul-deployment.yaml
-          kubectl apply -f k8s/consul/consul-service.yaml
-          kubectl apply -f k8s/consul/consul-ui-service.yaml
+          kubectl apply -f k8s/consul/deployment.yaml
+          kubectl apply -f k8s/consul/service.yaml
+          kubectl apply -f k8s/consul/-service.yaml
+
+       # Triển khai api-gateway lên GKE
+      - name: Deploy api-gateway to GKE
+        run: |
+          kubectl apply -f k8s/api-gateway/deployment.yaml
+          kubectl apply -f k8s/api-gateway/service.yaml
 
       # Triển khai user-service lên GKE
       - name: Deploy user-service to GKE
         run: |
-          kubectl apply -f k8s/user-service-deployment.yaml
-          kubectl apply -f k8s/user-service-service.yaml
+          kubectl apply -f k8s/user-service/deployment.yaml
+          kubectl apply -f k8s/user-service/service.yaml
       
       # Triển khai story-service lên GKE
       - name: Deploy story-service to GKE
         run: |
-          kubectl apply -f k8s/story-service-deployment.yaml
-          kubectl apply -f k8s/story-service-service.yaml
-      
-      # Triển khai api-gateway lên GKE
-      - name: Deploy api-gateway to GKE
+          kubectl apply -f k8s/story-service/deployment.yaml
+          kubectl apply -f k8s/story-service/service.yaml
+
+       # Triển khai interaction-service lên GKE
+      - name: Deploy interaction-service to GKE
         run: |
-          kubectl apply -f k8s/api-gateway/api-gateway-deployment.yaml
-          kubectl apply -f k8s/api-gateway/api-gateway-service.yaml
+          kubectl apply -f k8s/interaction-service/deployment.yaml
+          kubectl apply -f k8s/interaction-service/service.yaml
 
       # Kiểm tra trạng thái pods
       - name: Check Kubernetes status
