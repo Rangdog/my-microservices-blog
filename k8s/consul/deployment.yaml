@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  - name: consul
+  name: consul
 spec:
   replicas: 1
   selector:
@@ -26,4 +26,5 @@ spec:
             - containerPort: 8500
             - containerPort: 8600
               protocol: UDP
+
             
