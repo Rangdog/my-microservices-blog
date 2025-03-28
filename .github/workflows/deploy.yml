@@ -80,7 +80,7 @@ jobs:
         run: |
           kubectl apply -f k8s/consul/deployment.yaml
           kubectl apply -f k8s/consul/service.yaml
-          kubectl apply -f k8s/consul/-service.yaml
+          kubectl apply -f k8s/consul/ui-service.yaml
 
        # Triển khai api-gateway lên GKE
       - name: Deploy api-gateway to GKE
