@@ -27,7 +27,7 @@ spec:
           volumeMounts:
             - name: mysql-init-script
               mountPath: /docker-entrypoint-initdb.d
-    volumes:
+      volumes:  
         - name: mysql-init-script
           configMap:
             name: mysql-init-script
