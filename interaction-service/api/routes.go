@@ -15,16 +15,16 @@ func SetupRoutes(commentHandler *handlers.CommentHandler, favoriteHandler *handl
 	r.Delete("/comment",commentHandler.DeleteById)
 
 	//favorite
-	r.Post("/favotite", favoriteHandler.Create)
-	r.Get("/favotite/stories/{id}", favoriteHandler.GetALLFavoriteByStoryID)
-	r.Get("/favotite/users/{id}", favoriteHandler.GetALLFavoriteByUserID)
+	r.Post("/favorite", favoriteHandler.Create)
+	r.Get("/favorite/stories/{id}", favoriteHandler.GetALLFavoriteByStoryID)
+	r.Get("/favorite/users/{id}", favoriteHandler.GetALLFavoriteByUserID)
 	r.Delete("/favorite",favoriteHandler.DeleteById)
 
 	//follow
-	r.Post("follow", followHandler.Create)
+	r.Post("/follow", followHandler.Create)
 	r.Get("/follow/stories/{id}", followHandler.GetALLFolowByStoryID)
 	r.Get("/follow/users/{id}", followHandler.GetALLFollowByUserID)
-	r.Delete("/follow",favoriteHandler.DeleteById)
+	r.Delete("/follow",followHandler.DeleteById)
 
 	//rating
 	r.Post("/rating", ratingHandler.Create)
