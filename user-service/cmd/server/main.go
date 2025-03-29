@@ -24,11 +24,14 @@ func main() {
 		cfg.Port = ":8000"
 	}
 
-	if  cfg.JWTSecret == ""{
-		logger.Error("JWT_SECRET is required", nil)
-		return
-	}
-	dsn:="thanh:123@tcp(localhost:3306)/user_db?charset=utf8mb4&parseTime=True&loc=Local"
+	//Tạm thời chưa dùng đến, có thể sẽ chỉ check jwt bên API gateway
+	// if  cfg.JWTSecret == ""{
+	// 	logger.Error("JWT_SECRET is required", nil)
+	// 	return
+	// }
+
+
+	dsn:="thanh:123@tcp(mysql:3306)/user_db?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil{
 		logger.Error("Failed to connect to Mysql", err)

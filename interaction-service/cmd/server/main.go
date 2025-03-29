@@ -25,7 +25,7 @@ func main() {
 		cfg.Port = ":8200"
 	}
 
-	dsn := "thanh:123@tcp(localhost:3306)/interaction_db?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "thanh:123@tcp(mysql:3306)/interaction_db?charset=utf8mb4&parseTime=True&loc=Local"
     db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil{
 		logger.Error("Failed to connect to Mysql", err)
