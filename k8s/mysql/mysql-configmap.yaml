@@ -7,3 +7,7 @@ data:
     CREATE DATABASE IF NOT EXISTS user_db;
     CREATE DATABASE IF NOT EXISTS story_db;
     CREATE DATABASE IF NOT EXISTS interaction_db;
+    GRANT ALL PRIVILEGES ON user_db.* TO 'thanh'@'%';
+    GRANT ALL PRIVILEGES ON story_db.* TO 'thanh'@'%';
+    GRANT ALL PRIVILEGES ON interaction_db.* TO 'thanh'@'%';
+    FLUSH PRIVILEGES;

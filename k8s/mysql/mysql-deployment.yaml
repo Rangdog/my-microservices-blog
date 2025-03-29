@@ -31,3 +31,4 @@ spec:
         - name: mysql-init-script
           configMap:
             name: mysql-init-script
+            defaultMode: 0644
