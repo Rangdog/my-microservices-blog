@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main 
 
 jobs:
   build-and-deploy:
@@ -44,25 +47,25 @@ jobs:
       # Build và push Docker image cho user-service
       - name: Build & Push user-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/user-service:latest ./user-service
+          docker build -t gcr.io/my-blog-454607/user-service:latest -f user-service/Dockerfile .
           docker push gcr.io/my-blog-454607/user-service:latest
 
       # Build và push Docker image cho story-service
       - name: Build & Push story-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/story-service:latest ./story-service
+          docker build -t gcr.io/my-blog-454607/story-service:latest -f story-service/Dockerfile .
           docker push gcr.io/my-blog-454607/story-service:latest
       
        # Build và push Docker image cho interaction-service
       - name: Build & Push interaction-service Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/interaction-service:latest ./interaction-service
+          docker build -t gcr.io/my-blog-454607/interaction-service:latest -f interaction-service/Dockerfile .
           docker push gcr.io/my-blog-454607/interaction-service:latest
 
       # Build và push Docker image cho api-gateway
       - name: Build & Push api-gateway Docker Image
         run: |
-          docker build -t gcr.io/my-blog-454607/api-gateway:latest ./api-gateway
+          docker build -t gcr.io/my-blog-454607/api-gateway:latest -f api-gateway/Dockerfile .
           docker push gcr.io/my-blog-454607/api-gateway:latest
       
       # Triển khai MySQL lên GKE
@@ -75,27 +78,33 @@ jobs:
       # Triển khai Consul lên GKE
       - name: Deploy Consul to GKE
         run: |
-          kubectl apply -f k8s/consul/consul-deployment.yaml
-          kubectl apply -f k8s/consul/consul-service.yaml
-          kubectl apply -f k8s/consul/consul-ui-service.yaml
+          kubectl apply -f k8s/consul/deployment.yaml
+          kubectl apply -f k8s/consul/service.yaml
+          kubectl apply -f k8s/consul/ui-service.yaml
+
+       # Triển khai api-gateway lên GKE
+      - name: Deploy api-gateway to GKE
+        run: |
+          kubectl apply -f k8s/api-gateway/deployment.yaml
+          kubectl apply -f k8s/api-gateway/service.yaml
 
       # Triển khai user-service lên GKE
       - name: Deploy user-service to GKE
         run: |
-          kubectl apply -f k8s/user-service-deployment.yaml
-          kubectl apply -f k8s/user-service-service.yaml
+          kubectl apply -f k8s/user-service/deployment.yaml
+          kubectl apply -f k8s/user-service/service.yaml
       
       # Triển khai story-service lên GKE
       - name: Deploy story-service to GKE
         run: |
-          kubectl apply -f k8s/story-service-deployment.yaml
-          kubectl apply -f k8s/story-service-service.yaml
-      
-      # Triển khai api-gateway lên GKE
-      - name: Deploy api-gateway to GKE
+          kubectl apply -f k8s/story-service/deployment.yaml
+          kubectl apply -f k8s/story-service/service.yaml
+
+       # Triển khai interaction-service lên GKE
+      - name: Deploy interaction-service to GKE
         run: |
-          kubectl apply -f k8s/api-gateway/api-gateway-deployment.yaml
-          kubectl apply -f k8s/api-gateway/api-gateway-service.yaml
+          kubectl apply -f k8s/interaction-service/deployment.yaml
+          kubectl apply -f k8s/interaction-service/service.yaml
 
       # Kiểm tra trạng thái pods
       - name: Check Kubernetes status

@@ -12,7 +12,6 @@ require (
 )
 
 replace microservices v0.0.0 => ..
-
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect

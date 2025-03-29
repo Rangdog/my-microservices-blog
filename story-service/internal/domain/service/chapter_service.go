@@ -15,7 +15,7 @@ func NewChapterService(repo repository.ChapterRepository) *ChapterService{
 }
 
 func (Service *ChapterService) CreateChapter(storyId int64, title string) error{
-	chapter := entity.Chapter{Story_id: storyId, Title: title, Created_at: time.Now()}
+	chapter := entity.Chapter{StoryID: &storyId, Title: title, CreatedAt: time.Now()}
 	err:= Service.repo.Create(&chapter)
 	return err
 }

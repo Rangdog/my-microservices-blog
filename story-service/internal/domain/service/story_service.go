@@ -20,7 +20,7 @@ func (Service *StoryService) GetStoryByID(id int64)(*entity.Story, error){
 }
 
 func (Service *StoryService) CreateStory(title string, description string, author_id int64) error{
-	story:=entity.Story{Title:title,Description:&description,Author_id:author_id,Status:"continue",Created_at:time.Now(),Updated_at:time.Now()}
+	story:=entity.Story{Title:title,Description:&description,AuthorID:author_id,Status:"continue",CreatedAt:time.Now(),UpdatedAt:time.Now()}
 	err := Service.repo.Create(&story)
 	return err
 }

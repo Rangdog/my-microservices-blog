@@ -18,11 +18,17 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: "123"
-            - name: MYSQL_DATABASE
-              value: "userdb"
             - name: MYSQL_USER
               value: "thanh"
             - name: MYSQL_PASSWORD
               value: "123"
           ports:
             - containerPort: 3306
+          volumeMounts:
+            - name: mysql-init-script
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:  
+        - name: mysql-init-script
+          configMap:
+            name: mysql-init-script
+            defaultMode: 0644
