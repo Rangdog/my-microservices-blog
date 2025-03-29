@@ -17,5 +17,5 @@ type Story struct {
 	UpdatedAt   time.Time      `gorm:"autoUpdateTime" json:"updated_at"` // ✅ Sử dụng `autoUpdateTime`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 
-	Chapters []Chapter `gorm:"foreignKey:StoryID;constraint:OnDelete:CASCADE;"` // ✅ Định nghĩa quan hệ ngược lại
+	Chapters []Chapter `gorm:"foreignKey:StoryID;constraint:OnDelete:CASCADE;" json:"chapters"` // ✅ Định nghĩa quan hệ ngược lại
 }
