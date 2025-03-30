@@ -8,8 +8,11 @@ import (
 
 func SetupRoutes(handler *handlers.UserHandler, jwtsecret string) *chi.Mux{ 
 	r:= chi.NewRouter()
-	r.Post("/register", handler.Register)
-	r.Post("/login", handler.Login)
+	// Tạo một nhóm route với tiền tố `/api/user-service`
+	r.Route("/api/user-service", func(r chi.Router) {
+		r.Post("/register", handler.Register)
+		r.Post("/login", handler.Login)
+	})
 	r.Get("/heath", handler.HealthCheck)
 	return r
 }
