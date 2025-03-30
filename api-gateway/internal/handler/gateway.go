@@ -27,7 +27,8 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc{
 		}
 
 		service := services[0]
-		targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port)
+		// targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port) bỏ port
+		targetURL := fmt.Sprintf("http://%s", service.Service.Address)
 		
 		url,err := url.Parse(targetURL)
 		if err != nil{

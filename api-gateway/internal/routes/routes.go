@@ -14,4 +14,7 @@ func SetupRoutes(r *gin.Engine, h *handler.GatewayHandler){
 
 	stories := r.Group("/api/stories")
 	stories.Any("/*any", h.ProxyToService("story-service"))
+
+	interaction := r.Group("/api/interation")
+	interaction.Any("/*any", h.ProxyToService("interaction-service"))
 }
