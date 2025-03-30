@@ -35,6 +35,6 @@ func SetupRoutes(commentHandler *handlers.CommentHandler, favoriteHandler *handl
 
 
 	//health
-	r.Get("/heath", commentHandler.HealthCheck)
+	r.Get("/health", commentHandler.HealthCheck)
 	return r
 }

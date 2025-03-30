@@ -19,6 +19,6 @@ func SetupRoutes(storyHandler *handlers.StoryHandler, genreHandler *handlers.Gen
 		r.Post("/storygenre", storyGenreHandler.Create)
 		r.Delete("/storygenre", storyGenreHandler.DeleteById)
 	})
-	r.Get("/heath", storyHandler.HealthCheck)
+	r.Get("/health", storyHandler.HealthCheck)
 	return r
 }
