@@ -9,12 +9,12 @@ import (
 func SetupRoutes(r *gin.Engine, h *handler.GatewayHandler){
 	r.GET("/health", h.HealthCheck)
 
-	users:=r.Group("/api/users")
+	users:=r.Group("/api/user-service")
 	users.Any("/*any", h.ProxyToService("user-service"))
 
-	stories := r.Group("/api/stories")
+	stories := r.Group("/api/story-service")
 	stories.Any("/*any", h.ProxyToService("story-service"))
 
-	interaction := r.Group("/api/interation")
+	interaction := r.Group("/api/interaction-service")
 	interaction.Any("/*any", h.ProxyToService("interaction-service"))
 }
