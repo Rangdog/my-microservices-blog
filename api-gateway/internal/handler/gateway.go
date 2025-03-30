@@ -41,7 +41,7 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
         }
 
         fmt.Printf("[DEBUG] Request Method: %s, Path: %s, Query: %s\n", c.Request.Method, c.Request.URL.Path, c.Request.URL.RawQuery)
-
+		fmt.Println(url)
         proxy := httputil.NewSingleHostReverseProxy(url)
         proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
             fmt.Printf("[ERROR] Proxy error: %v\n", err)

@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"user-service/internal/domain/service"
 	response "user-service/internal/pkg/Response"
@@ -19,6 +21,8 @@ func NewUserHandler(service *service.UserService) *UserHandler{
 }
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request){
+	body, _ := io.ReadAll(r.Body)
+    fmt.Printf("[DEBUG] Received - Method: %s, Headers: %v, Body: %s\n", r.Method, r.Header, string(body))
 	var input struct{
 		Email string `json:"email" validate:"required, email"`
 		Password string `json:"password" validate:"required, min 6"`
