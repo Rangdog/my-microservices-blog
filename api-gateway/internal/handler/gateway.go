@@ -27,6 +27,11 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc{
 		}
 
 		service := services[0]
+		ip := service.Service.Address  // 🛑 Lấy địa chỉ IP của user-service
+		port := service.Service.Port   // 🛑 Nếu cần cổng thì lấy luôn
+
+		// 🛑 Log địa chỉ IP để debug
+		fmt.Printf("[DEBUG] Found service %s at IP: %s, Port: %d\n", serviceName, ip, port)
 		// targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port) bỏ port
 		targetURL := fmt.Sprintf("http://%s%s", service.Service.Address, c.Request.URL.Path) // Giữ nguyên đường dẫn gốc
 		
