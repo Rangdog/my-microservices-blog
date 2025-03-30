@@ -29,7 +29,7 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
         service := services[0]
         ip := service.Service.Address
         port := 80
-        targetURL := fmt.Sprintf("http://%s.default.svc.cluster.local:%d%s", ip, port, c.Request.URL.Path)
+        targetURL := fmt.Sprintf("http://%s:%d%s", ip, port, c.Request.URL.Path)
         fmt.Printf("[DEBUG] Proxying to: %s\n", targetURL)
         url, err := url.Parse(targetURL)
         if err != nil {
