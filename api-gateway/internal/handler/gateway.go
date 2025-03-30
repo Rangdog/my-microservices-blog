@@ -33,8 +33,8 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc{
 		// 🛑 Log địa chỉ IP để debug
 		fmt.Printf("[DEBUG] Found service %s at IP: %s, Port: %d\n", serviceName, ip, port)
 		// targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port) bỏ port
-		targetURL := fmt.Sprintf("http://%s%s", service.Service.Address, c.Request.URL.Path) // Giữ nguyên đường dẫn gốc
-		
+		// targetURL := fmt.Sprintf("http://%s%s", service.Service.Address, c.Request.URL.Path) // Giữ nguyên đường dẫn gốc
+		targetURL := fmt.Sprintf("http://%s.default.svc.cluster.local:%s", ip, c.Request.URL.Path)
 		// 🛑 Log URL để debug
 		fmt.Printf("[DEBUG] Proxy request to: %s\n", targetURL)
 
