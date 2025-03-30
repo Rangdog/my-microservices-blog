@@ -37,6 +37,10 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
             return
         }
         proxy := httputil.NewSingleHostReverseProxy(url)
+        proxy.Director = func(req *http.Request) {
+            req.URL.Path = c.Request.URL.Path // Đảm bảo giữ nguyên đường dẫn
+            req.Host = url.Host
+        }
         // Ghi lại lỗi hoặc phản hồi từ proxy
         proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
             fmt.Printf("[ERROR] Proxy failed: %v\n", err)
