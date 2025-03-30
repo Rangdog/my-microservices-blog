@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,8 +40,10 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
         proxy := httputil.NewSingleHostReverseProxy(url)
         fmt.Println(url)
         proxy.Director = func(req *http.Request) {
-            req.URL.Path = c.Request.URL.Path // Đảm bảo giữ nguyên đường dẫn
-            req.Host = ip
+            req.URL.Scheme = url.Scheme // "http"
+            req.URL.Host = ip + ":" + strconv.Itoa(port) // "34.118.233.80:80"
+            req.URL.Path = c.Request.URL.Path // "/api/user-service/register"
+            req.Host = ip // Header Host
         }
         // Ghi lại lỗi hoặc phản hồi từ proxy
         proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
