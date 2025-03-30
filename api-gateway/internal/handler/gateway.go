@@ -30,13 +30,25 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc{
 		// targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port) bỏ port
 		targetURL := fmt.Sprintf("http://%s%s", service.Service.Address, c.Request.URL.Path) // Giữ nguyên đường dẫn gốc
 		
+		// 🛑 Log URL để debug
+		fmt.Printf("[DEBUG] Proxy request to: %s\n", targetURL)
+
 		url,err := url.Parse(targetURL)
 		if err != nil{
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse target URL"})
 			return
 		}
+		// 🛑 Log thêm thông tin về request
+		fmt.Printf("[DEBUG] Request Method: %s, Path: %s, Query: %s\n", c.Request.Method, c.Request.URL.Path, c.Request.URL.RawQuery)
 
 		proxy:=httputil.NewSingleHostReverseProxy(url)
+
+		// 🛑 Log lỗi nếu có
+		proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+			fmt.Printf("[ERROR] Proxy error: %v\n", err)
+			c.JSON(http.StatusBadGateway, gin.H{"error": "Bad Gateway", "details": err.Error()})
+		}
+
 		proxy.ServeHTTP(c.Writer, c.Request)
 
 	}

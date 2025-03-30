@@ -9,7 +9,7 @@ import (
 
 func SetupRoutes(commentHandler *handlers.CommentHandler, favoriteHandler *handlers.FavoriteHandler, followHandler *handlers.FollowHandler, ratingHandler *handlers.RatingHandler) http.Handler{ 
 	r:=chi.NewRouter()
-	r.Route("/api/user-service", func(r chi.Router) {
+	r.Route("/api/interaction-service", func(r chi.Router) {
 		//comment
 		r.Post("/comment", commentHandler.Create)
 		r.Get("/comment/stories/{id}", commentHandler.GetALLCommentByStoryID)
