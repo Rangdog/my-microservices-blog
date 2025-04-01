@@ -22,8 +22,8 @@ func NewUserHandler(service *service.UserService) *UserHandler{
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request){
 	var input struct{
-		Email string `json:"email" validate:"required, email"`
-		Password string `json:"password" validate:"required, min 6"`
+		Email string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min 6"`
 	}
 	fmt.Printf("[DEBUG] body: %s",r.Body)
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil{
