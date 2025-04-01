@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,28 +19,53 @@ func NewGatewayHandler(consulClient *discovery.ConsulClient) *GatewayHandler{
 	return &GatewayHandler{consulClient: consulClient}
 }
 
-func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc{
-	return func(c *gin.Context){
-		services, err := h.consulClient.DiscoverService(serviceName)
-		if err != nil{
-			c.JSON(http.StatusServiceUnavailable, gin.H{"error": fmt.Sprintf("Service %s not available", serviceName)})
-			return
-		}
+func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        fmt.Printf("[DEBUG] Gateway received - Method: %s, Path: %s, Headers: %v\n", c.Request.Method, c.Request.URL.Path, c.Request.Header)
+        services, err := h.consulClient.DiscoverService(serviceName)
+        if err != nil {
+            c.JSON(http.StatusServiceUnavailable, gin.H{"error": fmt.Sprintf("Service %s not available", serviceName)})
+            return
+        }
+        service := services[0]
+        ip := service.Service.Address
+        port := 80
+        targetURL := fmt.Sprintf("http://%s:%d%s", ip, port, c.Request.URL.Path)
+        fmt.Printf("[DEBUG] Proxying to: %s\n", targetURL)
+        url, err := url.Parse(targetURL)
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse target URL"})
+            return
+        }
+        proxy := httputil.NewSingleHostReverseProxy(url)
+        fmt.Println(url)
+        proxy.Director = func(req *http.Request) {
+            req.URL.Scheme = url.Scheme // "http"
+            req.URL.Host = ip + ":" + strconv.Itoa(port) // "34.118.233.80:80"
+            req.URL.Path = c.Request.URL.Path // "/api/user-service/register"
+            req.Host = ip // Header Host
+            req.Body = c.Request.Body
+        }
+        // Ghi lại lỗi hoặc phản hồi từ proxy
+        proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+            fmt.Printf("[ERROR] Proxy failed: %v\n", err)
+            c.JSON(http.StatusBadGateway, gin.H{"error": "Bad Gateway", "details": err.Error()})
+        }
+        // Ghi lại phản hồi từ user-service
+        originalWriter := c.Writer
+        c.Writer = &responseLogger{ResponseWriter: originalWriter}
+        proxy.ServeHTTP(c.Writer, c.Request)
+    }
+}
 
-		service := services[0]
-		// targetURL := fmt.Sprintf("http://%s:%d", service.Service.Address, service.Service.Port) bỏ port
-		targetURL := fmt.Sprintf("http://%s%s", service.Service.Address, c.Request.URL.Path) // Giữ nguyên đường dẫn gốc
-		
-		url,err := url.Parse(targetURL)
-		if err != nil{
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse target URL"})
-			return
-		}
+// Struct để ghi log phản hồi
+type responseLogger struct {
+    gin.ResponseWriter
+}
 
-		proxy:=httputil.NewSingleHostReverseProxy(url)
-		proxy.ServeHTTP(c.Writer, c.Request)
-
-	}
+func (w *responseLogger) Write(b []byte) (int, error) {
+    fmt.Printf("[DEBUG] Response from user-service: %s\n", string(b))
+    return w.ResponseWriter.Write(b)
 }
 
 func (h *GatewayHandler) HealthCheck(c *gin.Context){

@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"user-service/internal/domain/service"
 	response "user-service/internal/pkg/Response"
@@ -20,22 +22,22 @@ func NewUserHandler(service *service.UserService) *UserHandler{
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request){
 	var input struct{
-		Email string `json:"email" validate:"required, email"`
-		Password string `json:"password" validate:"required, min 6"`
+		Email string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=6"`
 	}
-
+	fmt.Printf("[DEBUG] body: %s",r.Body)
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil{
-		response.Error(w,http.StatusBadRequest, err)
+		response.Error(w,http.StatusBadRequest, errors.New("error decoder"))
 		return
 	}
 
 	if err:=h.validator.Struct(input); err != nil{
-		response.Error(w, http.StatusBadRequest, err)
+		response.Error(w, http.StatusBadRequest, errors.New("error validator"))
 	}
 
 	user, err := h.service.Register(input.Email, input.Password)
 	if err != nil{
-		response.Error(w, http.StatusBadRequest, err)
+		response.Error(w, http.StatusBadRequest,  errors.New("error register"))
 		return
 	}
 	response.Success(w, http.StatusCreated,user, "User registered successfully")

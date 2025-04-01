@@ -10,7 +10,7 @@ import (
 func SetupRoutes(storyHandler *handlers.StoryHandler, genreHandler *handlers.GenreHandler, chapterHandler *handlers.ChapterHandler, storyGenreHandler *handlers.StoryGenreHandler) http.Handler{ 
 	r:=chi.NewRouter()
 	// Tạo một nhóm route với tiền tố `/api/user-service`
-	r.Route("/api/user-service", func(r chi.Router) {
+	r.Route("/api/story-service", func(r chi.Router) {
 		r.Post("/stories", storyHandler.Create)
 		r.Get("/stories/{id}", storyHandler.FindById)
 		r.Delete("/stories/{id}", storyHandler.DeleteById)
@@ -19,6 +19,6 @@ func SetupRoutes(storyHandler *handlers.StoryHandler, genreHandler *handlers.Gen
 		r.Post("/storygenre", storyGenreHandler.Create)
 		r.Delete("/storygenre", storyGenreHandler.DeleteById)
 	})
-	r.Get("/heath", storyHandler.HealthCheck)
+	r.Get("/health", storyHandler.HealthCheck)
 	return r
 }

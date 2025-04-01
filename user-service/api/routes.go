@@ -13,6 +13,6 @@ func SetupRoutes(handler *handlers.UserHandler, jwtsecret string) *chi.Mux{
 		r.Post("/register", handler.Register)
 		r.Post("/login", handler.Login)
 	})
-	r.Get("/heath", handler.HealthCheck)
+	r.Get("/health", handler.HealthCheck)
 	return r
 }
