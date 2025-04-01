@@ -27,7 +27,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request){
 		Email string `json:"email" validate:"required, email"`
 		Password string `json:"password" validate:"required, min 6"`
 	}
-
+	fmt.Printf(input.Email,input.Password)
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil{
 		response.Error(w,http.StatusBadRequest, err)
 		return
