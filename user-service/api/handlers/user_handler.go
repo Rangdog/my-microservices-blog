@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"user-service/internal/domain/service"
 	response "user-service/internal/pkg/Response"
