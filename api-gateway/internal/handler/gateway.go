@@ -44,6 +44,7 @@ func (h *GatewayHandler) ProxyToService(serviceName string) gin.HandlerFunc {
             req.URL.Host = ip + ":" + strconv.Itoa(port) // "34.118.233.80:80"
             req.URL.Path = c.Request.URL.Path // "/api/user-service/register"
             req.Host = ip // Header Host
+            req.Body = c.Request.Body
         }
         // Ghi lại lỗi hoặc phản hồi từ proxy
         proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {

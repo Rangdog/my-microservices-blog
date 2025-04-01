@@ -44,7 +44,7 @@ func main() {
 	logger.Info("Connected to MySQL")
 
 
-	consulClient, err := discovery.NewConsulClient("consul:8500", "user-service", "34.118.233.80", 8000)
+	consulClient, err := discovery.NewConsulClient("consul:8500", "user-service", "user-service", 8000)
 	if err != nil{
 		log.Fatal("Failed to initalize Consul client: ", err)
 	}
